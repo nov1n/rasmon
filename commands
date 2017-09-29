@@ -1,3 +1,0 @@
-sudo ./monitor.py -i wlo1mon --mac-info --ssid --rssi --delimiter "~"
-watch -n 1 'cat probemon.log | column -t -s "~"'
-cat probemon.log | grep -v 'UNKNOWN\|eduroam' | awk -F "~" '$5 > -60' | sort -t "~" -u -k2,2 | column -t -s "~" | vim - 

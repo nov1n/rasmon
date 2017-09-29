@@ -60,7 +60,6 @@ def build_packet_callback(time_fmt, logger, delimiter, mac_info, ssid, rssi):
             rssi_val = -(256-ord(packet.notdecoded[-4:-3]))
             fields.append(str(rssi_val))
 
-        logger.info(str(packet))
         logger.info(delimiter.join(fields))
 
     return packet_callback
@@ -70,7 +69,7 @@ def main():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-i', '--interface', help="capture interface")
     parser.add_argument('-t', '--time', default='iso', help="output time format (unix, iso)")
-    parser.add_argument('-o', '--output', default='probemon.log', help="logging output location")
+    parser.add_argument('-o', '--output', default='./logs/probemon.log_{}'.format(str(datetime.now())), help="logging output location")
     parser.add_argument('-b', '--max-bytes', default=5000000, help="maximum log size in bytes before rotating")
     parser.add_argument('-c', '--max-backups', default=99999, help="maximum number of log files to keep")
     parser.add_argument('-d', '--delimiter', default='\t', help="output field delimiter")
@@ -92,14 +91,11 @@ def main():
     logger.setLevel(logging.INFO)
     handler = RotatingFileHandler(args.output, maxBytes=args.max_bytes, backupCount=args.max_backups)
     logger.addHandler(handler)
+    print("Writing output to '%s'" % (args.output))
+
     if args.log:
         logger.addHandler(logging.StreamHandler(sys.stdout))
     built_packet_cb = build_packet_callback(args.time, logger, args.delimiter, args.mac_info, args.ssid, args.rssi)
-
-    if os.path.isfile(args.output):
-        args.output = args.output + "_"
-        print("Output file existed, writing to '%s' instead." % (args.output))
-        logger.info(args.delimiter.join(["timestamp", "mac", "ssid", "vendor", "rssi"]))
 
     sniff(iface=args.interface, prn=built_packet_cb, store=0)
 
