@@ -14,4 +14,4 @@ fi
 
 echo "Starting capture."
 cd /home/pi/Code/rasmon
-./monitor.py -i mon0 --mac-info --ssid --rssi --delimiter "~"
+./monitor.py -i mon0 --mac-info --ssid --rssi --delimiter "~" &> ./logs/monitor_log
