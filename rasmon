@@ -5,9 +5,13 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
+echo "Selecting wireless interface."
 if ! ip -o link show | awk -F': ' '{print $2}' | grep -q "mon"; then
     airmon-ng start wlx00c0ca58b82f
+else
+    echo "Using mon0."
 fi
 
+echo "Starting capture."
 cd /home/pi/Code/rasmon
 ./monitor.py -i mon0 --mac-info --ssid --rssi --delimiter "~"

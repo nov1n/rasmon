@@ -15,7 +15,7 @@ case "$1" in
   start)
     echo "Starting rasmon"
     # run application you want to start
-    /home/pi/Code/rasmon/rasmon > /dev/null 2>&1 &
+    /home/pi/Code/rasmon/rasmon > /home/pi/Code/rasmon/logs/init.d_log &
     ;;
   stop)
     echo "Stopping rasmon"
